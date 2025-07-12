@@ -19,9 +19,10 @@ if ('serviceWorker' in navigator) {
 }
 
 document.querySelector("#app").innerHTML = `
-  <div class="w-full flex justify-center items-center border-red-600" id="navigation"></div>
-    <div id="main-content"></div>
-
+  <div class="min-h-screen bg-base-200">
+    <div id="navigation" class="sticky top-0 z-50"></div>
+    <main id="main-content" class="min-h-[calc(100vh-4rem)]"></main>
+  </div>
 `;
 
 // form(document.querySelector("#form-container"));
@@ -64,21 +65,38 @@ function NavTableauElement(element) {
   const ClickElementNav = element.dataset.page;
   const mainContent = document.querySelector("#main-content");
 
+  // Supprimer le bouton flottant existant s'il y en a un
+  const existingFab = document.querySelector('#fab-button');
+  if (existingFab) existingFab.remove();
+
   if (ClickElementNav == "transactions") {
     mainContent.innerHTML = `
-    <div class=" z-10 flex flex-col w-1/2 mx-auto justify-center items-center mt-3" id="form-container">
-  `;
+      <div class="container mx-auto p-4" id="form-container"></div>
+    `;
     form(document.querySelector("#form-container"));
   } else if (ClickElementNav == "dashboard") {
     mainContent.innerHTML = `
-      <div id="Dash" class=" hero min-h-96 bg-base-200 rounded-lg">
-      </div>
-      `;
+      <div id="Dash" class="min-h-screen"></div>
+    `;
     Dashboard(document.getElementById("Dash"));
   } else if (ClickElementNav == "analytics") {
     mainContent.innerHTML = `
-    <div class="flex flex-col w-2/3 m-auto gap-4 bg-base-200 mt-20 py-7 px-2" id="transaction"></div>
-  `;
+      <div id="transaction" class="min-h-screen"></div>
+      <!-- Bouton flottant pour ajouter une transaction -->
+      <div id="fab-button" class="fixed bottom-6 right-6 z-40">
+        <button class="btn btn-circle btn-primary btn-lg shadow-lg hover:shadow-xl transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+        </button>
+      </div>
+    `;
     AffichageTransaction(document.getElementById("transaction"));
+    
+    // Ajouter l'événement au bouton flottant
+    document.querySelector('#fab-button button').addEventListener('click', () => {
+      // Naviguer vers la page transactions
+      document.querySelector('[data-page="transactions"]').click();
+    });
   }
 }

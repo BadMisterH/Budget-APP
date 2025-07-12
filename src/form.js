@@ -2,19 +2,77 @@ import { addTransaction } from "./CrudFireStore.js";
 
 export function form(formElement) {
   formElement.innerHTML += `
-   <form id="expense-form" class="transform translate-x-[-50%] translate-y-[40%] flex w-full absolute left-3/6 top-3/6  flex-col gap-4 p-6 bg-base-200 rounded-lg shadow-md max-w-md">
-      <div class="flex gap-2">
-         <button data-type="depenses" type="button" class="btn btn-error flex-1">Dépenses</button>
-         <button data-type="revenu" type="button" class="btn btn-accent flex-1">Revenu</button>
-      </div>
-      <input class="input input-bordered w-full" type="number" placeholder="Montant en (€)" name="amount" id="amount" min="0" step="0.01">
+   <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+     <form id="expense-form" class="w-full max-w-sm sm:max-w-md lg:max-w-lg bg-base-200 rounded-2xl shadow-2xl p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
+       <!-- Header -->
+       <div class="text-center mb-4 sm:mb-6">
+         <h2 class="text-xl sm:text-2xl font-bold">💰 Nouvelle Transaction</h2>
+         <p class="text-sm text-base-content/60 mt-1">Ajoutez vos revenus ou dépenses</p>
+       </div>
 
-    <select name="category" id="category" class="select select-bordered w-full" >
-        <option value="">Choisir une catégorie </option>
-    </select>
-    <textarea id="description" name="description" id="description" class="textarea textarea-bordered w-full" placeholder="Description de la transaction..." rows="3"></textarea>
-    <input type="submit" value="Ajouter" class="btn btn-primary w-full">
-    </form>
+       <!-- Type Selection -->
+       <div class="grid grid-cols-2 gap-2 sm:gap-3">
+         <button data-type="depenses" type="button" class="btn btn-error btn-sm sm:btn-md flex-1">
+           💸 Dépenses
+         </button>
+         <button data-type="revenu" type="button" class="btn btn-accent btn-sm sm:btn-md flex-1">
+           💰 Revenu
+         </button>
+       </div>
+
+       <!-- Amount Input -->
+       <div class="form-control">
+         <label class="label">
+           <span class="label-text font-medium">Montant</span>
+         </label>
+         <input 
+           class="input input-bordered w-full text-lg" 
+           type="number" 
+           placeholder="0.00" 
+           name="amount" 
+           id="amount" 
+           min="0" 
+           step="0.01"
+           required
+         >
+       </div>
+
+       <!-- Category Selection -->
+       <div class="form-control">
+         <label class="label">
+           <span class="label-text font-medium">Catégorie</span>
+         </label>
+         <select name="category" id="category" class="select select-bordered w-full" required>
+           <option value="">Choisir une catégorie</option>
+         </select>
+       </div>
+
+       <!-- Description -->
+       <div class="form-control">
+         <label class="label">
+           <span class="label-text font-medium">Description</span>
+         </label>
+         <textarea 
+           id="description" 
+           name="description" 
+           class="textarea textarea-bordered w-full resize-none" 
+           placeholder="Décrivez votre transaction..." 
+           rows="3"
+           required
+         ></textarea>
+       </div>
+
+       <!-- Actions -->
+       <div class="grid grid-cols-2 gap-2 sm:gap-3 pt-2">
+         <button type="button" id="cancelBtn" class="btn btn-ghost btn-sm sm:btn-md">
+           Annuler
+         </button>
+         <button type="submit" class="btn btn-primary btn-sm sm:btn-md">
+           ✓ Ajouter
+         </button>
+       </div>
+     </form>
+   </div>
 `;
 
   const categorySelected = document.getElementById("category");
