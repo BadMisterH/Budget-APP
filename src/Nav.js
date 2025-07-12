@@ -1,6 +1,6 @@
 export function Nav(navigation) {
   navigation.innerHTML = `
-    <nav class=" navbar bg-base-100 shadow-lg">
+    <nav class="flex justify-around navbar bg-base-100 shadow-lg">
       <div class="navbar-start">
         <div class="dropdown">
           <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
