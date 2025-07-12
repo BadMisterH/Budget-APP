@@ -2,12 +2,17 @@
   "name": "My Budget App",
   "short_name": "Budget",
   "description": "Application de gestion de budget personnel",
-  "start_url": "./",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3b82f6",
   "orientation": "portrait-primary",
   "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "32x32",
+      "type": "image/svg+xml"
+    },
     {
       "src": "/vite.svg",
       "sizes": "192x192",
@@ -23,6 +28,6 @@
   ],
   "categories": ["finance", "productivity"],
   "lang": "fr",
-  "scope": "./",
+  "scope": "/",
   "prefer_related_applications": false
 }

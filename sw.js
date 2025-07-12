@@ -1,9 +1,9 @@
 const CACHE_NAME = 'my-budget-app-v1';
 const urlsToCache = [
-  './',
-  './index.html',
-  './manifest.json',
-  './vite.svg'
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/vite.svg'
 ];
 
 // Installation du Service Worker
@@ -13,7 +13,11 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME)
       .then((cache) => {
         console.log('Service Worker: Caching Files');
-        return cache.addAll(urlsToCache);
+        // Mettre en cache uniquement les fichiers essentiels
+        return cache.addAll([
+          '/',
+          '/manifest.json'
+        ]);
       })
       .catch((error) => {
         console.log('Service Worker: Cache failed', error);
@@ -42,20 +46,24 @@ self.addEventListener('activate', (event) => {
   return self.clients.claim();
 });
 
-// Interception des requêtes
+// Interception des requêtes (plus simple)
 self.addEventListener('fetch', (event) => {
+  // Ne pas intercepter les requêtes vers Firebase ou autres APIs externes
+  if (event.request.url.includes('firestore.googleapis.com') || 
+      event.request.url.includes('identitytoolkit.googleapis.com')) {
+    return;
+  }
+
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      // Retourner depuis le cache si disponible
-      if (response) {
-        return response;
-      }
-      
-      // Sinon, aller chercher sur le réseau
-      return fetch(event.request).catch(() => {
-        // En cas d'erreur réseau, retourner une page hors ligne
+    fetch(event.request).catch(() => {
+      // En cas d'erreur réseau, essayer le cache
+      return caches.match(event.request).then((response) => {
+        if (response) {
+          return response;
+        }
+        // Retourner la page principale pour les documents
         if (event.request.destination === 'document') {
-          return caches.match('./index.html');
+          return caches.match('/');
         }
       });
     })
