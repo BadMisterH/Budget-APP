@@ -1,4 +1,4 @@
-import { getTransactions } from "./src/CrudFireStore.js";
+import { getTransactions } from "./CrudFireStore.js";
 
 export async function Dashboard(elementHtml) {
   const a = await getTransactions();

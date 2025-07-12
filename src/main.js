@@ -2,7 +2,7 @@ import "./style.css";
 import { form } from "./form.js";
 import { Nav } from "./Nav.js";
 import { AffichageTransaction } from "./AffichageTransaction.js";
-import { Dashboard } from "../Dashboard.js";
+import { Dashboard } from "./Dashboard.js";
 import "./pwa-install.js";
 
 // Enregistrement du Service Worker

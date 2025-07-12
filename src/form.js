@@ -2,73 +2,92 @@ import { addTransaction } from "./CrudFireStore.js";
 
 export function form(formElement) {
   formElement.innerHTML += `
-   <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-     <form id="expense-form" class="w-full max-w-sm sm:max-w-md lg:max-w-lg bg-base-200 rounded-2xl shadow-2xl p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
-       <!-- Header -->
-       <div class="text-center mb-4 sm:mb-6">
-         <h2 class="text-xl sm:text-2xl font-bold">💰 Nouvelle Transaction</h2>
-         <p class="text-sm text-base-content/60 mt-1">Ajoutez vos revenus ou dépenses</p>
+   <div class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+     <form id="expense-form" class="w-full max-w-md bg-base-100 rounded-3xl shadow-2xl border border-base-300 p-6 space-y-6 transform transition-all duration-300 scale-100">
+       <!-- Header avec animation -->
+       <div class="text-center space-y-2">
+         <div class="text-4xl mb-2">💰</div>
+         <h2 class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+           Nouvelle Transaction
+         </h2>
+         <p class="text-sm text-base-content/60">Gérez vos finances en toute simplicité</p>
        </div>
 
-       <!-- Type Selection -->
-       <div class="grid grid-cols-2 gap-2 sm:gap-3">
-         <button data-type="depenses" type="button" class="btn btn-error btn-sm sm:btn-md flex-1">
-           💸 Dépenses
+       <!-- Type Selection avec design amélioré -->
+       <div class="grid grid-cols-2 gap-3">
+         <button data-type="depenses" type="button" class="btn btn-outline btn-error hover:btn-error group transition-all duration-200">
+           <span class="group-hover:scale-110 transition-transform">💸</span>
+           Dépenses
          </button>
-         <button data-type="revenu" type="button" class="btn btn-accent btn-sm sm:btn-md flex-1">
-           💰 Revenu
+         <button data-type="revenu" type="button" class="btn btn-outline btn-success hover:btn-success group transition-all duration-200">
+           <span class="group-hover:scale-110 transition-transform">💰</span>
+           Revenu
          </button>
        </div>
 
-       <!-- Amount Input -->
+       <!-- Amount Input avec style amélioré -->
        <div class="form-control">
          <label class="label">
-           <span class="label-text font-medium">Montant</span>
+           <span class="label-text font-semibold flex items-center gap-2">
+             <span class="text-lg">💳</span>
+             Montant
+           </span>
          </label>
-         <input 
-           class="input input-bordered w-full text-lg" 
-           type="number" 
-           placeholder="0.00" 
-           name="amount" 
-           id="amount" 
-           min="0" 
-           step="0.01"
-           required
-         >
+         <div class="relative">
+           <input 
+             class="input input-bordered w-full text-xl font-mono pl-8 focus:input-primary transition-all duration-200" 
+             type="number" 
+             placeholder="0.00" 
+             name="amount" 
+             id="amount" 
+             min="0" 
+             step="0.01"
+             required
+           >
+           <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50 font-bold">€</span>
+         </div>
        </div>
 
-       <!-- Category Selection -->
+       <!-- Category Selection avec style amélioré -->
        <div class="form-control">
          <label class="label">
-           <span class="label-text font-medium">Catégorie</span>
+           <span class="label-text font-semibold flex items-center gap-2">
+             <span class="text-lg">🏷️</span>
+             Catégorie
+           </span>
          </label>
-         <select name="category" id="category" class="select select-bordered w-full" required>
+         <select name="category" id="category" class="select select-bordered w-full focus:select-primary transition-all duration-200" required>
            <option value="">Choisir une catégorie</option>
          </select>
        </div>
 
-       <!-- Description -->
+       <!-- Description avec style amélioré -->
        <div class="form-control">
          <label class="label">
-           <span class="label-text font-medium">Description</span>
+           <span class="label-text font-semibold flex items-center gap-2">
+             <span class="text-lg">📝</span>
+             Description
+           </span>
          </label>
          <textarea 
            id="description" 
            name="description" 
-           class="textarea textarea-bordered w-full resize-none" 
+           class="textarea textarea-bordered w-full resize-none focus:textarea-primary transition-all duration-200" 
            placeholder="Décrivez votre transaction..." 
            rows="3"
            required
          ></textarea>
        </div>
 
-       <!-- Actions -->
-       <div class="grid grid-cols-2 gap-2 sm:gap-3 pt-2">
-         <button type="button" id="cancelBtn" class="btn btn-ghost btn-sm sm:btn-md">
+       <!-- Actions avec design moderne -->
+       <div class="flex gap-3 pt-4">
+         <button type="button" id="cancelBtn" class="btn btn-ghost flex-1 hover:bg-base-200">
+           <span class="text-lg">✕</span>
            Annuler
          </button>
-         <button type="submit" class="btn btn-primary btn-sm sm:btn-md">
-           ✓ Ajouter
+         <button type="submit" class="btn btn-primary flex-1 hover:scale-105 transition-transform duration-200">
+           <span class="text-lg">✓</span>
+           Ajouter
          </button>
        </div>
      </form>
@@ -79,7 +98,6 @@ export function form(formElement) {
   const buttons = document.querySelectorAll("button[data-type]");
   const cancelBtn = document.getElementById("cancelBtn");
   const formModal = formElement.querySelector('.fixed');
-  const expenseForm = document.getElementById("expense-form");
 
   // Variable pour stocker le gestionnaire d'événement Échap
   let escapeHandler;
@@ -146,33 +164,34 @@ export function form(formElement) {
   buttons.forEach((elementBtn) => {
     elementBtn.addEventListener("click", () => {
       selectedType = elementBtn.dataset.type;
+      
+      // Réinitialiser tous les boutons à l'état non sélectionné
       buttons.forEach((b) => {
-        b.classList.remove("btn-success", "btn-error", "btn-active");
-        b.classList.add("btn-accent");
+        b.classList.remove("btn-success", "btn-error", "btn-outline");
+        b.classList.add("btn-outline");
+        if (b.dataset.type === "depenses") {
+          b.classList.add("btn-error");
+        } else {
+          b.classList.add("btn-success");
+        }
       });
+      
+      // Activer le bouton sélectionné
       const typeCategorie = elementBtn.dataset.type;
-
-      categories[typeCategorie].forEach((ele) => {
-        const option = document.createElement("option");
-        option.value = ele.value;
-        option.textContent = ele.label;
-        categorySelected.appendChild(option);
-      });
-
       ColorButton(elementBtn, typeCategorie);
       seletedChoise(typeCategorie);
     });
   });
 
-
   //changer l'etat du bouton en fonction de la catégorie
   function ColorButton(button, typeCategorie) {
+    // Retirer l'état outline et ajouter l'état actif
+    button.classList.remove("btn-outline");
+    
     if (typeCategorie === "depenses") {
-      button.classList.remove("btn-accent");
-      button.classList.add("btn-error");
+      button.classList.add("btn-error"); // État actif pour dépenses
     } else if (typeCategorie === "revenu") {
-      button.classList.remove("btn-accent");
-      button.classList.add("btn-error");
+      button.classList.add("btn-success"); // État actif pour revenus
     }
   }
 
@@ -196,6 +215,12 @@ export function form(formElement) {
 
   // Initialiser avec "depenses" par défaut
   seletedChoise("depenses");
+  
+  // Initialiser l'état visuel du bouton par défaut
+  const defaultButton = document.querySelector('button[data-type="depenses"]');
+  if (defaultButton) {
+    ColorButton(defaultButton, "depenses");
+  }
   // Ajouter le gestionnaire d'événements pour preventDefault
   const form = formElement.querySelector("#expense-form");
 
