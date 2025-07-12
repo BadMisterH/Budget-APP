@@ -86,9 +86,6 @@ export async function Dashboard(elementHtml) {
              </div>
            </div>
          </div>
-             <div class="text-center mt-3">
-               <div class="badge badge-primary badge-sm">Vue d'ensemble</div>
-             </div>
            </div>
          </div>
 
