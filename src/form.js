@@ -77,6 +77,52 @@ export function form(formElement) {
 
   const categorySelected = document.getElementById("category");
   const buttons = document.querySelectorAll("button[data-type]");
+  const cancelBtn = document.getElementById("cancelBtn");
+  const formModal = formElement.querySelector('.fixed');
+  const expenseForm = document.getElementById("expense-form");
+
+  // Variable pour stocker le gestionnaire d'événement Échap
+  let escapeHandler;
+
+  // Fonction pour fermer le formulaire
+  function closeForm() {
+    // Retirer le gestionnaire d'événement Échap
+    if (escapeHandler) {
+      document.removeEventListener('keydown', escapeHandler);
+    }
+    
+    // Vider le contenu du formulaire
+    formElement.innerHTML = '';
+    
+    // Retourner à la page analytics
+    const analyticsLink = document.querySelector('[data-page="analytics"]');
+    if (analyticsLink) {
+      analyticsLink.click();
+    }
+  }
+
+  // Gestionnaire pour le bouton Annuler
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', closeForm);
+  }
+
+  // Gestionnaire pour fermer en cliquant sur l'arrière-plan
+  if (formModal) {
+    formModal.addEventListener('click', (e) => {
+      // Fermer seulement si on clique sur l'arrière-plan (pas sur le formulaire)
+      if (e.target === formModal) {
+        closeForm();
+      }
+    });
+  }
+
+  // Gestionnaire pour fermer avec la touche Échap
+  escapeHandler = (e) => {
+    if (e.key === 'Escape') {
+      closeForm();
+    }
+  };
+  document.addEventListener('keydown', escapeHandler);
 
   const categories = {
     revenu: [
@@ -181,8 +227,16 @@ export function form(formElement) {
     try {
       await addTransaction(transaction);
       console.log("Transaction sauvegardée dans Firebase!");
-      form.reset();
-      seletedChoise("depenses");
+      
+      // Afficher un message de succès
+      showSuccessMessage("Transaction ajoutée avec succès ! 🎉");
+      
+      // Fermer le formulaire après succès
+      setTimeout(() => {
+        closeForm();
+      }, 1500);
+      
+      // Déclencher l'événement pour mettre à jour les autres vues
       window.dispatchEvent(
         new CustomEvent("transactionAdded", {
           detail: { transaction },
@@ -193,4 +247,20 @@ export function form(formElement) {
       alert("Erreur lors de la sauvegarde de la transaction");
     }
   });
+
+  // Fonction pour afficher un message de succès
+  function showSuccessMessage(message) {
+    const successDiv = document.createElement('div');
+    successDiv.className = 'toast toast-top toast-center z-50';
+    successDiv.innerHTML = `
+      <div class="alert alert-success">
+        <span>${message}</span>
+      </div>
+    `;
+    document.body.appendChild(successDiv);
+    
+    setTimeout(() => {
+      successDiv.remove();
+    }, 3000);
+  }
 }
