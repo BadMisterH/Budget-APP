@@ -1,51 +1,57 @@
 <!doctype html>
 <html lang="fr" data-theme="synthwave">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- PWA Meta Tags -->
-    <meta name="description" content="Application de gestion de budget personnel" />
-    <meta name="theme-color" content="#ff7ac6" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="Budget App" />
-    
-    <!-- Manifest -->
-    <link rel="manifest" href="/manifest.json" />
-    
-    <!-- Icons -->
-    <link rel="icon" type="image/png" sizes="192x192" href="/assets/logo.png" />
-    <link rel="icon" type="image/png" sizes="512x512" href="/assets/logo.png" />
-    <link rel="apple-touch-icon" href="/assets/logo.png" />
-    
-    <!-- Stylesheets -->
-    <link href="/src/style.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <title>My Budget App</title>
-  </head>
-  <body>
-    <div class="relative" id="app">
-    </div>
-    
-    <!-- Install Banner -->
-    <div id="installBanner" class="fixed bottom-4 left-4 right-4 bg-primary text-primary-content p-4 rounded-lg shadow-lg hidden">
-      <div class="flex justify-between items-center">
-        <div>
-          <h3 class="font-bold">Installer l'application</h3>
-          <p class="text-sm opacity-90">Ajoutez My Budget App à votre écran d'accueil</p>
-        </div>
-        <div class="flex gap-2">
-          <button id="installBtn" class="btn btn-sm btn-secondary">Installer</button>
-          <button id="dismissBtn" class="btn btn-sm btn-ghost">×</button>
-        </div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- PWA Meta Tags -->
+  <meta name="description" content="Application de gestion de budget personnel" />
+  <meta name="theme-color" content="#ff7ac6" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Budget App" />
+  <!-- Manifest -->
+  <link rel="manifest" href="/manifest.json" />
+
+  <!-- Icons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/logo.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/logo.png" />
+  <link rel="apple-touch-icon" href="/assets/logo.png" />
+
+  <!-- Stylesheets -->
+  <link href="/src/style.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <title>My Budget App</title>
+</head>
+
+<body>
+  <div class="relative" id="app"> 
+  </div>
+
+
+  </div>
+
+  <!-- Install Banner -->
+  <div id="installBanner"
+    class="fixed bottom-4 left-4 right-4 bg-primary text-primary-content p-4 rounded-lg shadow-lg hidden">
+    <div class="flex justify-between items-center">
+      <div>
+        <h3 class="font-bold">Installer l'application</h3>
+        <p class="text-sm opacity-90">Ajoutez My Budget App à votre écran d'accueil</p>
+      </div>
+      <div class="flex gap-2">
+        <button id="installBtn" class="btn btn-sm btn-secondary">Installer</button>
+        <button id="dismissBtn" class="btn btn-sm btn-ghost">×</button>
       </div>
     </div>
-    
-    <script type="module" src="/src/main.js"></script>
-  </body>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
 </html>

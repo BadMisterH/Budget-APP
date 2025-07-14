@@ -1,10 +1,29 @@
-import {collection, addDoc, getDocs, doc, deleteDoc } from 'firebase/firestore';
+import {
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  deleteDoc,
+  query,
+  where,
+} from "firebase/firestore";
+import { db, auth } from "../firebase-config.js";
 
-import { db } from "../firebase-config.js";
 
 export async function addTransaction(transaction) {
   try {
-    const docRef = await addDoc(collection(db, "transactions"), transaction);
+    // ✅ Vérifier que l'utilisateur est connecté
+    if (!auth.currentUser) {
+      throw new Error("Utilisateur non connecté");
+    }
+
+    // ✅ Ajouter l'ID de l'utilisateur à la transaction
+    const transactionWithUser = {
+      ...transaction,
+      userId: auth.currentUser.uid // Associer à l'utilisateur connecté
+    };
+
+    const docRef = await addDoc(collection(db, "transactions"), transactionWithUser);
     console.log("Transaction ajoutée avec l'ID: ", docRef.id);
     return docRef.id;
   } catch (error) {
@@ -15,14 +34,25 @@ export async function addTransaction(transaction) {
 
 export async function getTransactions() {
   try {
-    const transactionsRef = collection(db, "transactions");
-    const querySnapshot = await getDocs(transactionsRef);
+    // ✅ Vérifier que l'utilisateur est connecté
+    if (!auth.currentUser) {
+      throw new Error("Utilisateur non connecté");
+    }
+
+    // ✅ Créer une requête filtrée par utilisateur
+    const q = query(
+      collection(db, "transactions"),
+      where("userId", "==", auth.currentUser.uid)
+    );
+
+    const querySnapshot = await getDocs(q);
 
     const transactions = [];
     querySnapshot.forEach((doc) => {
       transactions.push({ id: doc.id, ...doc.data() });
     });
 
+    console.log(`📊 ${transactions.length} transactions trouvées pour ${auth.currentUser.email}`);
     return transactions;
   } catch (error) {
     console.error("Erreur lors de la récupération: ", error);
@@ -32,11 +62,15 @@ export async function getTransactions() {
 
 export async function supprimerTransaction(id) {
   try {
+    // ✅ Vérifier que l'utilisateur est connecté
+    if (!auth.currentUser) {
+      throw new Error("Utilisateur non connecté");
+    }
+
     // Référence au document à supprimer
     const docRef = doc(db, "transactions", id);
-    console.log(id)
+    console.log(id);
 
-    
     // Supprimer le document
     await deleteDoc(docRef);
     console.log("Document supprimé avec succès:", id);
@@ -46,3 +80,5 @@ export async function supprimerTransaction(id) {
     throw error;
   }
 }
+
+

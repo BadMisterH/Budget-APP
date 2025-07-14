@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Écouter l'événement beforeinstallprompt
   window.addEventListener('beforeinstallprompt', (e) => {
-    console.log('PWA: beforeinstallprompt event was fired.');
+    // console.log('PWA: beforeinstallprompt event was fired.');
     
     // Empêcher la mini-infobar par défaut
     e.preventDefault();
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function showInstallBanner() {
     if (installBanner) {
       installBanner.classList.remove('hidden');
-      console.log('PWA: Install banner shown');
+      // console.log('PWA: Install banner shown');
     }
   }
 
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Gestionnaire du bouton d'installation
   if (installBtn) {
     installBtn.addEventListener('click', async () => {
-      console.log('PWA: User clicked install button');
+      // console.log('PWA: User clicked install button');
       
       if (!deferredPrompt) {
         console.log('PWA: deferredPrompt is not available');

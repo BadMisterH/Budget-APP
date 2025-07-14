@@ -14,7 +14,7 @@ export async function Dashboard(elementHtml) {
   });
   const solde = totalRevenu - totalDepenses;
 
-  console.log(solde);
+  // console.log(solde);
 
   elementHtml.innerHTML = `
    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-7xl">
@@ -47,7 +47,7 @@ export async function Dashboard(elementHtml) {
 
          <!-- Alert responsive -->
          <div class="alert ${solde >= 0 ? "alert-success" : "alert-warning"} mb-6">
-           <span class="text-sm sm:text-base lg:text-lg font-semibold">
+           <span class="text-center text-sm sm:text-base lg:text-lg font-semibold">
              ${solde >= 0 ? "✅" : "⚠️"} 
              ${solde >= 0 ? "Félicitations ! Votre situation financière est positive." : "Attention ! Vos dépenses dépassent vos revenus."}
            </span>
