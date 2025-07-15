@@ -2,6 +2,7 @@ import { getAuth } from "firebase/auth";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail, // Ajouter cette fonction
 } from "firebase/auth";
 
 // const { Authentifi } = await import('./src/FormAuth.js');
@@ -13,7 +14,7 @@ export function formTraitement(form) {
   form.innerHTML = `
     <div class="min-h-screen bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center p-4">
       <div class="card w-full max-w-md shadow-2xl bg-base-100 border border-base-300">
-        <div class="card-body p-8">
+        <div class="card-body p-8 gap-1">
           <!-- Header avec emoji et titre -->
           <div class="text-center mb-6">
             <div class="text-6xl mb-4 animate-bounce">💰</div>
@@ -24,11 +25,11 @@ export function formTraitement(form) {
           </div>
 
           <!-- Onglets modernes -->
-          <div class="tabs tabs-boxed mb-6 bg-base-200">
-            <button id="loginTab" class="tab tab-active flex-1 font-semibold">
+          <div class="tabs tabs-boxed mb-6 bg-base-200 gap-2">
+            <button id="loginTab" class="tab tab-active border flex-1 font-semibold">
               🔑 Connexion
             </button>
-            <button id="registerTab" class="tab flex-1 font-semibold">
+            <button id="registerTab" class="tab border flex-1 font-semibold">
               📝 Inscription
             </button>
           </div>
@@ -128,6 +129,13 @@ export function formTraitement(form) {
                   <span id="switchAction">S'inscrire</span>
                 </button>
               </p>
+              
+              <!-- Lien mot de passe oublié (visible seulement en mode connexion) -->
+              <div id="forgotPasswordLink" class="mt-2">
+                <button type="button" id="forgotPassword" class="link link-accent text-xs">
+                  🔑 Mot de passe oublié ?
+                </button>
+              </div>
             </div>
           </form>
 
@@ -135,6 +143,48 @@ export function formTraitement(form) {
           <div id="loadingState" class="text-center py-4 hidden">
             <span class="loading loading-spinner loading-md text-primary"></span>
             <p class="text-sm text-base-content/60 mt-2">Connexion en cours...</p>
+          </div>
+
+          <!-- Modal Reset Password -->
+          <div id="resetModal" class="modal">
+            <div class="modal-box">
+              <h3 class="font-bold text-lg mb-4">
+                🔑 Réinitialiser le mot de passe
+              </h3>
+              <p class="text-sm text-base-content/60 mb-4">
+                Entrez votre email pour recevoir un lien de réinitialisation
+              </p>
+              
+              <form id="resetForm" class="space-y-4">
+                <div class="form-control">
+                  <input 
+                    type="email" 
+                    id="resetEmail" 
+                    class="input input-bordered w-full" 
+                    placeholder="votre@email.com"
+                    required
+                  >
+                </div>
+                
+                <div id="resetError" class="alert alert-error hidden">
+                  <span id="resetErrorText"></span>
+                </div>
+                
+                <div id="resetSuccess" class="alert alert-success hidden">
+                  <span>📧 Email de réinitialisation envoyé ! Vérifiez votre boîte mail.</span>
+                </div>
+                
+                <div class="modal-action">
+                  <button type="button" id="closeResetModal" class="btn btn-ghost">
+                    Annuler
+                  </button>
+                  <button type="submit" class="btn btn-primary">
+                    <span class="loading loading-spinner loading-sm hidden" id="resetLoading"></span>
+                    Envoyer le lien
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
@@ -152,6 +202,11 @@ export function formTraitement(form) {
   const togglePasswordBtn = form.querySelector('#togglePassword');
   const errorZone = form.querySelector('#errorZone');
   const loadingState = form.querySelector('#loadingState');
+  const forgotPasswordBtn = form.querySelector('#forgotPassword');
+  const forgotPasswordLink = form.querySelector('#forgotPasswordLink');
+  const resetModal = form.querySelector('#resetModal');
+  const resetForm = form.querySelector('#resetForm');
+  const closeResetModal = form.querySelector('#closeResetModal');
 
   // Gestion du basculement entre connexion/inscription
   function switchMode(toLogin = true) {
@@ -173,6 +228,7 @@ export function formTraitement(form) {
       submitBtn.className = 'btn btn-primary w-full text-lg font-semibold hover:scale-105 transition-all duration-200 shadow-lg';
       switchText.textContent = 'Pas encore de compte ?';
       switchAction.textContent = "S'inscrire";
+      forgotPasswordLink.classList.remove('hidden'); // Afficher le lien
     } else {
       // Mode inscription
       registerTab.classList.add('tab-active');
@@ -183,6 +239,7 @@ export function formTraitement(form) {
       submitBtn.className = 'btn btn-secondary w-full text-lg font-semibold hover:scale-105 transition-all duration-200 shadow-lg';
       switchText.textContent = 'Déjà un compte ?';
       switchAction.textContent = 'Se connecter';
+      forgotPasswordLink.classList.add('hidden'); // Masquer le lien
     }
     hideError();
   }
@@ -207,6 +264,78 @@ export function formTraitement(form) {
   loginTab.addEventListener('click', () => switchMode(true));
   registerTab.addEventListener('click', () => switchMode(false));
   switchModeBtn.addEventListener('click', () => switchMode(!isLoginMode));
+
+  // Event listeners pour le reset de mot de passe
+  forgotPasswordBtn.addEventListener('click', () => {
+    const currentEmail = form.querySelector('#email').value;
+    if (currentEmail) {
+      form.querySelector('#resetEmail').value = currentEmail;
+    }
+    resetModal.classList.add('modal-open');
+  });
+
+  closeResetModal.addEventListener('click', () => {
+    resetModal.classList.remove('modal-open');
+    resetForm.reset();
+    form.querySelector('#resetError').classList.add('hidden');
+    form.querySelector('#resetSuccess').classList.add('hidden');
+  });
+
+  resetForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const resetEmail = form.querySelector('#resetEmail').value.trim();
+    const resetError = form.querySelector('#resetError');
+    const resetSuccess = form.querySelector('#resetSuccess');
+    const resetLoading = form.querySelector('#resetLoading');
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+
+    if (!resetEmail) {
+      showResetError('📧 Veuillez entrer votre email.');
+      return;
+    }
+
+    resetError.classList.add('hidden');
+    resetSuccess.classList.add('hidden');
+    resetLoading.classList.remove('hidden');
+    submitBtn.disabled = true;
+
+    try {
+      await ResetPassword(resetEmail);
+      resetSuccess.classList.remove('hidden');
+      
+      setTimeout(() => {
+        resetModal.classList.remove('modal-open');
+        resetForm.reset();
+        resetSuccess.classList.add('hidden');
+      }, 3000);
+      
+    } catch (error) {
+      showResetError(getResetErrorMessage(error.code));
+    } finally {
+      resetLoading.classList.add('hidden');
+      submitBtn.disabled = false;
+    }
+  });
+
+  function showResetError(message) {
+    const resetError = form.querySelector('#resetError');
+    const resetErrorText = form.querySelector('#resetErrorText');
+    resetErrorText.textContent = message;
+    resetError.classList.remove('hidden');
+  }
+
+  function getResetErrorMessage(errorCode) {
+    switch (errorCode) {
+      case 'auth/user-not-found':
+        return '👤 Aucun compte trouvé avec cet email.';
+      case 'auth/invalid-email':
+        return '📧 Format d\'email invalide.';
+      case 'auth/too-many-requests':
+        return '⏰ Trop de tentatives. Réessayez plus tard.';
+      default:
+        return '❌ Erreur lors de l\'envoi. Veuillez réessayer.';
+    }
+  }
 
   // Fonctions utilitaires
   function showError(message) {
@@ -332,6 +461,19 @@ export async function Connexion(email, password) {
     const errorCode = error.code;
     const errorMessage = error.message;
     console.error("Erreur de connexion:", errorCode, errorMessage);
+    throw error;
+  }
+}
+
+export async function ResetPassword(email) {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    console.log("Email de réinitialisation envoyé à:", email);
+    return true;
+  } catch (error) {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.error("Erreur reset password:", errorCode, errorMessage);
     throw error;
   }
 }
