@@ -3,6 +3,30 @@
     themes: synthwave;
 }
 
+/* Styles pour la navigation mobile */
+@media (max-width: 1024px) {
+  .navbar-start h1 {
+    font-size: 1rem;
+    margin-left: 0.5rem;
+  }
+  
+  .navbar-end .dropdown .btn-circle {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  
+  .dropdown-content {
+    min-width: 12rem;
+  }
+  
+  /* Assurer que le dropdown mobile est bien visible */
+  .navbar-start .dropdown .dropdown-content {
+    left: 0;
+    right: auto;
+    transform: none;
+  }
+}
+
 /* Styles personnalisés pour le calendrier */
 .calendar-day {
   border: 1px solid rgba(255, 255, 255, 0.1);

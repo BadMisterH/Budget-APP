@@ -5,7 +5,21 @@ export function Nav(navigation) {
   navigation.innerHTML = `
     <nav class="navbar bg-base-100 shadow-lg">
       <div class="navbar-start">
-        <h1>💰 My Budget</h1>
+        <!-- Menu mobile hamburger -->
+        <div class="dropdown lg:hidden">
+          <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+            </svg>
+          </div>
+          <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+            <li><a data-page="dashboard" class="nav-link-mobile">📊 Tableau de bord</a></li>
+            <li><a data-page="transactions" class="nav-link-mobile">💰 Transactions</a></li>
+            <li><a data-page="analytics" class="nav-link-mobile">📈 Analyses</a></li>
+            <li><a data-page="calendar" class="nav-link-mobile">📅 Calendrier</a></li>
+          </ul>
+        </div>
+        <h1 class="text-lg font-bold">💰 My Budget</h1>
       </div>
       
       <div class="navbar-center hidden lg:flex">
@@ -233,4 +247,24 @@ export function Nav(navigation) {
       }
     }, 3000);
   }
+
+  // Ajouter les event listeners pour les liens de navigation mobile
+  const navLinksMobile = document.querySelectorAll(".nav-link-mobile");
+  navLinksMobile.forEach((element) => {
+    element.addEventListener("click", (e) => {
+      e.preventDefault();
+      
+      // Fermer le dropdown mobile
+      const dropdown = document.querySelector('.navbar-start .dropdown');
+      if (dropdown) {
+        dropdown.blur(); // Ferme le dropdown
+      }
+      
+      // Déclencher l'événement sur le lien desktop correspondant
+      const desktopLink = document.querySelector(`[data-page="${element.dataset.page}"].nav-link`);
+      if (desktopLink) {
+        desktopLink.click();
+      }
+    });
+  });
 }
