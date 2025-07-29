@@ -3,6 +3,7 @@ import { form } from "./form.js";
 import { Nav } from "./Nav.js";
 import { AffichageTransaction } from "./AffichageTransaction.js";
 import { Dashboard } from "./Dashboard.js";
+import { Calendar } from "./Calendar.js";
 import "./pwa-install.js";
 import { auth } from "../firebase-config.js";
 import { onAuthStateChanged } from "firebase/auth";
@@ -104,6 +105,11 @@ function All() {
       <div id="Dash" class="min-h-screen"></div>
     `;
       Dashboard(document.getElementById("Dash"));
+    } else if (ClickElementNav == "calendar") {
+      mainContent.innerHTML = `
+      <div id="Calendar" class="min-h-screen"></div>
+    `;
+      Calendar(document.getElementById("Calendar"));
     } else if (ClickElementNav == "analytics") {
       mainContent.innerHTML = `
       <div id="transaction" class="min-h-screen"></div>

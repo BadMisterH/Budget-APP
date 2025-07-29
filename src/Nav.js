@@ -13,6 +13,7 @@ export function Nav(navigation) {
           <li><a data-page="dashboard" class="nav-link btn btn-primary">📊 Tableau de bord</a></li>
           <li><a data-page="transactions" class="nav-link btn btn-ghost">💰 Transactions</a></li>
           <li><a data-page="analytics" class="nav-link btn btn-ghost">📈 Analyses</a></li>
+          <li><a data-page="calendar" class="nav-link btn btn-ghost">📅 Calendrier</a></li>
         </ul>
       </div>
 

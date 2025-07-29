@@ -2,3 +2,43 @@
 @plugin "daisyui" {
     themes: synthwave;
 }
+
+/* Styles personnalisés pour le calendrier */
+.calendar-day {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+.calendar-day:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Animation pour les indicateurs de transaction */
+.calendar-day .bg-success,
+.calendar-day .bg-error,
+.calendar-day .bg-info {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Responsive pour le calendrier */
+@media (max-width: 768px) {
+  .calendar-day {
+    min-height: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .calendar-day {
+    min-height: 5rem;
+  }
+}
