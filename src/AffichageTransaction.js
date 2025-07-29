@@ -54,13 +54,13 @@ export function AffichageTransaction(transactionsList) {
               <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                 <!-- Info principale -->
                 <div class="flex items-center gap-4 flex-1">
-                  <div class="p-3 rounded-full ${transaction.type === 'revenu' ? 'bg-success/20 text-success' : 'bg-error/20 text-error'}">
+                  <div class="p-3 rounded-full ${transaction.type === 'revenu' ? 'bg-primary/20 text-primary' : 'bg-neutral/20 text-neutral'}">
                     <span class="text-xl">${transaction.type === 'revenu' ? '📈' : '📉'}</span>
                   </div>
                   <div class="flex-1 min-w-0">
                     <h3 class="font-bold text-base sm:text-lg truncate mb-1">${transaction.description}</h3>
                     <div class="flex flex-wrap items-center gap-2">
-                      <div class="badge badge-${transaction.type === 'revenu' ? 'success' : 'error'} badge-sm">
+                      <div class="badge badge-${transaction.type === 'revenu' ? 'primary' : 'neutral'} badge-sm">
                         ${transaction.type === 'revenu' ? 'Revenu' : 'Dépense'}
                       </div>
                       <span class="text-xs text-base-content/60">
@@ -73,7 +73,7 @@ export function AffichageTransaction(transactionsList) {
                 <!-- Montant et actions -->
                 <div class="flex items-center justify-between sm:justify-end gap-4">
                   <div class="text-right">
-                    <div class="font-bold text-xl ${transaction.type === "depenses" ? "text-error" : "text-success"}">
+                    <div class="font-bold text-xl ${transaction.type === "depenses" ? "text-neutral" : "text-primary"}">
                       ${transaction.type === "depenses" ? `-${parseFloat(transaction.amount).toFixed(2)}€` : `+${parseFloat(transaction.amount).toFixed(2)}€`}
                     </div>
                   </div>

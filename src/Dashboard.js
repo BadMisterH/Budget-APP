@@ -26,13 +26,13 @@ export async function Dashboard(elementHtml) {
          <div class="stats stats-vertical sm:stats-horizontal shadow w-full mb-6">
            <div class="stat place-items-center p-4">
              <h3 class="stat-title text-sm sm:text-base">Revenus</h3>
-             <div class="stat-value text-success text-lg sm:text-2xl lg:text-3xl">${parseFloat(totalRevenu).toFixed(2)}€</div>
+             <div class="stat-value text-primary text-lg sm:text-2xl lg:text-3xl">${parseFloat(totalRevenu).toFixed(2)}€</div>
              <div class="stat-desc text-xs sm:text-sm">↗︎ Entrées</div>
            </div>
            
            <div class="stat place-items-center p-4">
              <h3 class="stat-title text-sm sm:text-base">Dépenses</h3>
-             <div class="stat-value text-error text-lg sm:text-2xl lg:text-3xl">-${parseFloat(totalDepenses).toFixed(2)}€</div>
+             <div class="stat-value text-neutral text-lg sm:text-2xl lg:text-3xl">-${parseFloat(totalDepenses).toFixed(2)}€</div>
              <div class="stat-desc text-xs sm:text-sm">↘︎ Sorties</div>
            </div>
            
@@ -83,7 +83,7 @@ export async function Dashboard(elementHtml) {
                <canvas id="barChart" width="280" height="280"></canvas>
              </div>
              <div class="text-center mt-3">
-               <div class="badge badge-accent badge-sm">Analyse détaillée</div>
+               <div class="badge badge-neutral badge-sm">Analyse détaillée</div>
              </div>
            </div>
          </div>
@@ -96,11 +96,18 @@ export async function Dashboard(elementHtml) {
     createCharts(totalRevenu, totalDepenses);
   }, 100);
   function createCharts(revenus, depenses) {
-    // Configuration commune
+    // Configuration commune - Couleurs personnalisées
     const colors = {
-      revenus: "#22c55e", // Vert
-      depenses: "#ef4444", // Rouge
+      revenus: "#ff7ac6", // Rose primary du thème synthwave
+      depenses: "oklch(45% 0.24 277.023)", // Bleu personnalisé pour les dépenses
     };
+
+    // Debug: vérifier les valeurs
+    console.log("Données graphiques:", { revenus, depenses });
+
+    // S'assurer que les valeurs ne sont pas nulles/undefined
+    const revenusSafe = revenus || 0;
+    const depensesSafe = depenses || 0;
 
     // Graphique en Camembert
     const pieCtx = document.getElementById("pieChart");
@@ -111,7 +118,7 @@ export async function Dashboard(elementHtml) {
           labels: ["Revenus", "Dépenses"],
           datasets: [
             {
-              data: [revenus, depenses],
+              data: [revenusSafe, depensesSafe],
               backgroundColor: [colors.revenus, colors.depenses],
               borderWidth: 3,
               borderColor: "#ffffff",
@@ -129,6 +136,7 @@ export async function Dashboard(elementHtml) {
                 usePointStyle: true,
                 font: {
                   size: 14,
+                  color: "#ffffff"
                 },
               },
             },
@@ -148,7 +156,7 @@ export async function Dashboard(elementHtml) {
           datasets: [
             {
               label: "Montant (€)",
-              data: [revenus, depenses],
+              data: [revenusSafe, depensesSafe],
               backgroundColor: [colors.revenus, colors.depenses],
               borderRadius: 8,
               borderSkipped: false,

@@ -14,7 +14,6 @@ export function Nav(navigation) {
           </div>
           <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
             <li><a data-page="dashboard" class="nav-link-mobile">📊 Tableau de bord</a></li>
-            <li><a data-page="transactions" class="nav-link-mobile">💰 Transactions</a></li>
             <li><a data-page="analytics" class="nav-link-mobile">📈 Analyses</a></li>
             <li><a data-page="calendar" class="nav-link-mobile">📅 Calendrier</a></li>
           </ul>
@@ -25,7 +24,6 @@ export function Nav(navigation) {
       <div class="navbar-center hidden lg:flex">
         <ul class="menu menu-horizontal px-1">
           <li><a data-page="dashboard" class="nav-link btn btn-primary">📊 Tableau de bord</a></li>
-          <li><a data-page="transactions" class="nav-link btn btn-ghost">💰 Transactions</a></li>
           <li><a data-page="analytics" class="nav-link btn btn-ghost">📈 Analyses</a></li>
           <li><a data-page="calendar" class="nav-link btn btn-ghost">📅 Calendrier</a></li>
         </ul>
@@ -50,6 +48,15 @@ export function Nav(navigation) {
         </div>
       </div>
     </nav>
+    
+    <!-- Bouton flottant pour ajouter une transaction -->
+    <div id="fab-transaction" class="fixed bottom-6 right-6 z-50">
+      <button id="fabTransactionBtn" class="btn btn-circle btn-primary btn-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+      </button>
+    </div>
   `;
 
   // Ajouter l'event listener pour la déconnexion
@@ -267,4 +274,23 @@ export function Nav(navigation) {
       }
     });
   });
+
+  // Ajouter l'event listener pour le bouton flottant transactions
+  const fabTransactionBtn = document.getElementById('fabTransactionBtn');
+  if (fabTransactionBtn) {
+    fabTransactionBtn.addEventListener('click', () => {
+      // Naviguer vers la page transactions
+      const mainContent = document.querySelector("#main-content");
+      if (mainContent) {
+        mainContent.innerHTML = `
+          <div class="container mx-auto p-4" id="form-container"></div>
+        `;
+        
+        // Importer et charger le formulaire de transaction
+        import('./form.js').then(({ form }) => {
+          form(document.querySelector("#form-container"));
+        });
+      }
+    });
+  }
 }

@@ -52,11 +52,11 @@ export async function Calendar(elementHtml) {
           <div class="card-body py-4">
             <div class="flex flex-wrap justify-center gap-4 text-sm">
               <div class="flex items-center gap-2">
-                <div class="w-4 h-4 bg-success rounded-full"></div>
+                <div class="w-4 h-4 bg-primary rounded-full"></div>
                 <span>Revenus</span>
               </div>
               <div class="flex items-center gap-2">
-                <div class="w-4 h-4 bg-error rounded-full"></div>
+                <div class="w-4 h-4 bg-neutral rounded-full"></div>
                 <span>Dépenses</span>
               </div>
               <div class="flex items-center gap-2">
@@ -159,9 +159,9 @@ export async function Calendar(elementHtml) {
     if (hasRevenu && hasDepenses) {
       color = 'bg-info';
     } else if (hasRevenu) {
-      color = 'bg-success';
+      color = 'bg-primary';
     } else if (hasDepenses) {
-      color = 'bg-error';
+      color = 'bg-neutral';
     }
     
     return `<div class="w-2 h-2 lg:w-3 lg:h-3 ${color} rounded-full mt-1"></div>`;
@@ -266,11 +266,11 @@ export async function Calendar(elementHtml) {
         <div class="stats stats-horizontal shadow mb-6 w-full">
           <div class="stat">
             <div class="stat-title">Revenus</div>
-            <div class="stat-value text-success text-lg lg:text-2xl">${totalRevenu.toFixed(2)}€</div>
+            <div class="stat-value text-primary text-lg lg:text-2xl">${totalRevenu.toFixed(2)}€</div>
           </div>
           <div class="stat">
             <div class="stat-title">Dépenses</div>
-            <div class="stat-value text-error text-lg lg:text-2xl">${totalDepenses.toFixed(2)}€</div>
+            <div class="stat-value text-neutral text-lg lg:text-2xl">${totalDepenses.toFixed(2)}€</div>
           </div>
           <div class="stat">
             <div class="stat-title">Solde</div>
@@ -288,14 +288,14 @@ export async function Calendar(elementHtml) {
               <div class="card-body p-4">
                 <div class="flex justify-between items-center">
                   <div class="flex items-center gap-3">
-                    <div class="w-3 h-3 rounded-full ${transaction.type === 'revenu' ? 'bg-success' : 'bg-error'}"></div>
+                    <div class="w-3 h-3 rounded-full ${transaction.type === 'revenu' ? 'bg-primary' : 'bg-neutral'}"></div>
                     <div>
                       <h5 class="font-medium">${transaction.description}</h5>
                       <p class="text-sm text-base-content/60">${transaction.categories || 'Sans catégorie'}</p>
                     </div>
                   </div>
                   <div class="text-right">
-                    <p class="font-bold ${transaction.type === 'revenu' ? 'text-success' : 'text-error'}">
+                    <p class="font-bold ${transaction.type === 'revenu' ? 'text-primary' : 'text-neutral'}">
                       ${transaction.type === 'revenu' ? '+' : '-'}${parseFloat(transaction.amount).toFixed(2)}€
                     </p>
                   </div>
